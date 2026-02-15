@@ -7,7 +7,29 @@ ListaCircular::ListaCircular()
     cabeza = nullptr;
 }
 
-void ListaCircular::insertar(int valor) 
+void ListaCircular::insertarInicio(int valor)
+{
+    Nodo* nuevoNodo = new Nodo();
+    nuevoNodo->dato = valor;
+    if (cabeza == nullptr)
+    {
+        cabeza = nuevoNodo;
+        nuevoNodo->siguiente = nuevoNodo;
+    }
+    else
+    {
+        Nodo* ultimo = cabeza;
+        while (ultimo->siguiente != cabeza)
+        {
+            ultimo = ultimo->siguiente;
+        }
+        nuevoNodo->siguiente = cabeza;
+        cabeza = nuevoNodo;
+        ultimo->siguiente = cabeza;
+    }
+}
+
+void ListaCircular::insertarFinal(int valor) 
 {
     Nodo* nuevoNodo = new Nodo();
     nuevoNodo->dato = valor;
@@ -26,6 +48,31 @@ void ListaCircular::insertar(int valor)
         temp->siguiente = nuevoNodo;
         nuevoNodo->siguiente = cabeza;
     }
+}
+
+void ListaCircular::insertarMedio(int valor, int indice)
+{
+    if (indice <= 1) 
+    {
+        insertarInicio(valor);
+        return;
+    }
+    if (indice > obtenerTamaño() + 1)
+    {
+        insertarFinal(valor);
+        return;
+    }
+    Nodo* nuevoNodo = new Nodo();
+    nuevoNodo->dato = valor;
+    Nodo* anterior = cabeza;
+    int contador = 1;
+    while (contador < indice - 1 && anterior->siguiente != cabeza)
+    {
+        anterior = anterior->siguiente;
+        contador++;
+    }
+    nuevoNodo->siguiente = anterior->siguiente;
+    anterior->siguiente = nuevoNodo;
 }
 
 void ListaCircular::eliminarInicio()
@@ -124,4 +171,18 @@ void ListaCircular::mostrar()
     }
     while (temp != cabeza);
     cout << endl;
+}
+
+int ListaCircular::obtenerTamaño()
+{
+    if (cabeza == nullptr) return 0;
+    int contador = 0;
+    Nodo* temp = cabeza;
+    do 
+    {
+        contador++;
+        temp = temp->siguiente;
+    }
+    while (temp != cabeza);
+    return contador;
 }
